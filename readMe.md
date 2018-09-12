@@ -21,6 +21,6 @@ gitHub地址：https://github.com/ypcouc/common_tool <br>
 6、图片处理工具 ImageOperateUtils<br>
 7、发送邮件工具 SendEmailUtil<br>
 <br>
-联系方式：714782688@qq.com<br>
+联系方式：qq：714782688<br>
 欢迎加qq一起讨论
 
