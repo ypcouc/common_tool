@@ -1,8 +1,8 @@
 package com.ypc.jdk8;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.LongSummaryStatistics;
+import org.apache.poi.hpsf.SummaryInformation;
+
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -78,10 +78,24 @@ public class LambdaEg {
         // flatMap把多维转为降维
         List<String> strList = strs.stream().map(str -> str.split(",")).flatMap(/*Arrays::stream*/str->Arrays.stream(str)).collect(Collectors.toList());
         System.out.println("strList => " + strList);
+    }
 
-
-
-
+    /**
+     * group by分组统计
+     */
+    public static void groupSum(){
+        Foo foo1 = new Foo("a", 2);
+        Foo foo2 = new Foo("b", 23);
+        Foo foo3 = new Foo("b", 6);
+        List<Foo> list = new ArrayList<>();
+        list.add(foo1);
+        list.add(foo2);
+        list.add(foo3);
+        Map<String, IntSummaryStatistics> map = list.stream().collect(
+                Collectors.groupingBy(Foo::getCode,Collectors.summarizingInt(Foo::getCount)));
+        map.forEach((k,v)->{
+            System.out.println(k+":"+v);
+        });
     }
 
     public static void main(String[] args) {
@@ -93,7 +107,9 @@ public class LambdaEg {
         myFunInterface.getDef();
         MyFunInterface.doOther("C++");*/
 
-        collectOpt();
+        //collectOpt();
+
+        groupSum();
 
     }
 }
