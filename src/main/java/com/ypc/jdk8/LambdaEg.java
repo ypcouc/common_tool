@@ -93,9 +93,7 @@ public class LambdaEg {
         list.add(foo3);
         Map<String, IntSummaryStatistics> map = list.stream().collect(
                 Collectors.groupingBy(Foo::getCode,Collectors.summarizingInt(Foo::getCount)));
-        map.forEach((k,v)->{
-            System.out.println(k+":"+v);
-        });
+        map.forEach((k,v)-> System.out.println(k+":"+v));
     }
 
     public static void main(String[] args) {
