@@ -1,5 +1,7 @@
 package com.ypc.alg;
 
+import java.util.*;
+
 /**
  * @ClassName LeetCode
  * @Description TODO
@@ -44,6 +46,127 @@ public class LeetCode {
         return result;
     }
 
+    //二进制手表
+    public static List<String> readBinaryWatch(int num) {
+        Integer[] hour = {1,2,4,8};
+        Integer[] minute = {1,2,4,8,16,32};
+        List<String> result = new ArrayList<>();
+        if(num > 8 || num < 0){
+            return new ArrayList<>();
+        }
+        if(num == 0){
+            return Arrays.asList("0:00");
+        }
+        int hourNM = 0;
+        int minuteNM = 0;
+        while (hourNM <= num && minuteNM <= num && hourNM <= 3 ){
+            minuteNM = num - hourNM;
+            if(minuteNM > 5){
+                hourNM++;
+                continue;
+            }
+            Set<Set<Integer>> hourSet = randomSelectN(hour,hourNM++);
+            Set<Set<Integer>> minuteSet = randomSelectN(minute,minuteNM);
+
+            if ((hourSet != null && !hourSet.isEmpty()) ||
+                    (minuteSet != null && !minuteSet.isEmpty())) {
+                Set<Integer> hourSumSet = new HashSet<>();
+                if(hourSet == null || hourSet.isEmpty()){
+                    hourSumSet.add(0);
+                }else {
+                    Iterator<Set<Integer>> itHour = hourSet.iterator();
+                    while (itHour.hasNext()){
+                        Integer hourSum = 0;
+                        Iterator<Integer> itHourItem = itHour.next().iterator();
+                        while (itHourItem.hasNext()){
+                            hourSum += itHourItem.next();
+                        }
+                        if (hourSum <= 11) {
+                            hourSumSet.add(hourSum);
+                        }
+                    }
+                }
+
+                Set<Integer> minuteSumSet = new HashSet<>();
+                if(minuteSet == null || minuteSet.isEmpty()){
+                    minuteSumSet.add(0);
+                }else {
+                    Iterator<Set<Integer>>  itMinute = minuteSet.iterator();
+                    while (itMinute.hasNext()){
+                        Integer minuteSum = 0;
+                        Iterator<Integer> itMinuteItem = itMinute.next().iterator();
+                        while (itMinuteItem.hasNext()){
+                            minuteSum += itMinuteItem.next();
+                        }
+                        if (minuteSum <= 59) {
+                            minuteSumSet.add(minuteSum);
+                        }
+                    }
+                }
+
+                Iterator<Integer> itHourSum = hourSumSet.iterator();
+
+                while (itHourSum.hasNext()){
+                    Integer tempHour = itHourSum.next();
+                    Iterator<Integer> itMinuteSum = minuteSumSet.iterator();
+                    while (itMinuteSum.hasNext()){
+                        Integer tempMinute = itMinuteSum.next();
+                        result.add(tempHour+":"+(tempMinute>=10?tempMinute:"0"+tempMinute));
+                    }
+                }
+            }
+        }
+
+        return result;
+
+    }
+
+    /**
+     * 从集合中随意挑选n个元素
+     * @param arry
+     * @param num
+     * @return
+     */
+    public static Set<Set<Integer>> randomSelectN(Integer[] arry,int num){
+        if(arry == null || num > arry.length){
+            return new HashSet<Set<Integer>>();
+        }
+        if(num < 1){
+            return new HashSet<Set<Integer>>();
+        }
+        if(num == 1){
+            Set<Set<Integer>> result = new HashSet<>();
+            for (int i = 0; i < arry.length; i++) {
+                result.add(new HashSet<>(Arrays.asList(arry[i])));
+            }
+            return result;
+        }else {
+            Set<Set<Integer>> resultTemp = randomSelectN(arry,num-1);
+            Set<Set<Integer>> result = new HashSet<>();
+            if (resultTemp != null && resultTemp.size() > 0) {
+                Iterator<Set<Integer>> setIt = resultTemp.iterator();
+                while (setIt.hasNext()){
+                    Set<Integer> value = setIt.next();
+                    Set<Integer> temp = new HashSet<>(Arrays.asList(arry));
+                    temp.removeAll(value);
+                    Iterator<Integer> it = temp.iterator();
+                    while (it.hasNext()){
+                        Set<Integer> orig =  new HashSet<>();
+                        orig.addAll(value);
+                        orig.add(it.next());
+                        result.add(orig);
+                    }
+                }
+            }
+            return result;
+        }
+
+    }
+
+    public void getRead(int[] hour,int[] minute,int num,List<Integer> hours,List<Integer> minutes){
+
+    }
+
     public static void main(String[] args) {
         /*int 祖 = 22269;
         int 国 = 24198;
@@ -57,5 +180,21 @@ public class LeetCode {
         System.err.print((char)日);
         System.err.print((char)快);
         System.err.print((char)乐);*/
+        //List<Integer> hour = Arrays.asList(new Integer[]{1,2,4,8});
+        /*Integer[] hour = new Integer[]{32,16,8,4,2,1};
+        Set<Set<Integer>> sets = randomSelectN(hour,4);
+        sets.forEach(e->{
+            e.forEach(a->{
+                System.out.print(a);
+                System.out.print(",");
+            });
+            System.out.print("\n");
+        });*/
+
+
+        List<String> list = readBinaryWatch(5);
+        System.out.println(list);
+
+
     }
 }
