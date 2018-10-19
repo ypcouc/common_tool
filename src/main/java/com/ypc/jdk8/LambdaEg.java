@@ -107,7 +107,12 @@ public class LambdaEg {
 
         //collectOpt();
 
-        groupSum();
+        //groupSum();
+        List<String> strs = Arrays.asList("好,好,学", "习,天,天", "向,上");
+        System.out.println(strs);
+        strs.forEach(e->e+="dssd");
+        System.out.println(strs);
+
 
     }
 }
