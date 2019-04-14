@@ -96,6 +96,12 @@ public class LambdaEg {
         map.forEach((k,v)-> System.out.println(k+":"+v));
     }
 
+    public String getBegin(){
+        List<Integer> source = Arrays.asList(new Integer[]{24320,24037,22823,21513});
+        String s = source.stream().map(e->String.valueOf((char) e.intValue())).collect(Collectors.joining());
+        return s;
+    }
+
     public static void main(String[] args) {
         //implInterface();
         /*MyFunInterface<String> myFunInterface = (e)->{

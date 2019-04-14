@@ -1,6 +1,6 @@
 gitHub地址：https://github.com/ypcouc/common_tool <br>
 ##自动生成doclever接口文档<br>
-1、doclever部署请参考：https://github.com/sx1989827/DOClever；<br>
+1、doclever部署请参考：https://github.com/sx1989827/DOClever<br>
 2、根据类属性，自动生成接口的入参及出参，<br>
 注意属性注释要以"/** 字段说明 */"格式才能识别自动填入接口字段备注；<br>
 3、可单独生成一个get或post接口，也可一次生成增、删、改、查接口；<br>

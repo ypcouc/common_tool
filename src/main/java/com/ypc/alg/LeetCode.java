@@ -490,13 +490,18 @@ public class LeetCode {
         Set<String> result = new HashSet<>();
         combine(a,num,b,low,result);
         System.out.println(result);*/
-        Long start = System.currentTimeMillis();
+        /*Long start = System.currentTimeMillis();
         String s = "abcdabcdabcdabcdabcdabcdabcdabcddcbadcbadcbadcbadcbadcbadcbadcba";
         //String s = "dbaaaacbaccdbddbddcabdddcaaccdcdbaaaadcbbdabdaacac";
         //String s = "dbcbaaacdcbabcbddaac";
         int n = countPalindromicSubsequences(s);
         Long end = System.currentTimeMillis();
         System.out.println(end-start);
-        System.out.println(n);
+        System.out.println(n);*/
+         String text = "42032de4136242040ec28392:bd1ea8bb9e2dc90039b33271";
+         byte[] textByte = text.getBytes();
+        Base64.Encoder encoder = Base64.getEncoder();
+        String encodedText = encoder.encodeToString(textByte);
+        System.out.println(encodedText);
     }
 }
