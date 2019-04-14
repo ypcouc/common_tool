@@ -1,6 +1,5 @@
-package com.ypc.codegenerator;
+package com.ypc.common.utils;
 
-import com.ypc.utils.DateUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
@@ -267,7 +266,7 @@ public class GenEntityMysql {
             sb.append(newLine);
             sb.append(tab);*/
             sb.append("private " + sqlType2JavaType(colTypes[i]) + " " + colnames[i] + ";");
-            sb.append(newLine2);
+            sb.append(newLine);
         }
 
     }
@@ -279,6 +278,7 @@ public class GenEntityMysql {
      */
     private void processAllMethod(StringBuffer sb) {
 
+        sb.append(newLine);
         for (int i = 0; i < size; i++) {
             if(cols[i].contains("update") || cols[i].contains("create") || cols[i].contains("fk_factory") || cols[i].contains("fk_company")){
                 continue;
@@ -377,6 +377,8 @@ public class GenEntityMysql {
             result = "BIT";
         }else if (sqlType.equalsIgnoreCase("datetime")) {
             result = "TIMESTAMP";
+        }else if (sqlType.equalsIgnoreCase("text")) {
+            result = "VARCHAR";
         }
         else {
             result = sqlType.toUpperCase();

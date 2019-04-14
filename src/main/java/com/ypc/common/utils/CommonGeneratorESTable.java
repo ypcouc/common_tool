@@ -1,19 +1,16 @@
-package com.ypc.codegenerator;
+package com.ypc.common.utils;
 
 /**
  * Created by dodo on 2017/9/2.
  */
 
-
-import com.ypc.common.utils.CharUtils;
-import com.ypc.common.utils.DateUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.lang.reflect.Field;
 
 /** 文件生成器*/
-public class CommonGeneratorES {
+public class CommonGeneratorESTable {
 
     private static final String mapperSuffix = "Repository.java";
     private static final String serviceSuffix  = "Service.java";
@@ -36,9 +33,26 @@ public class CommonGeneratorES {
     private int size;//列总数
     private String[] fieldNames; // 属性名
     private String[] fieldTypes; //属性类型
+    private String index; //索引
+    private String type; //类型
 
+    public String getIndex() {
+        return index;
+    }
 
-    public void generatorAll(String packagePath, String filename, String moduleName,Object obj){
+    public void setIndex(String index) {
+        this.index = index;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void generatorAll(String packagePath, String filename, String moduleName, Object obj){
         if(StringUtils.isEmpty(packagePath) || StringUtils.isEmpty(filename)){
             System.out.println("参数为空");
             return;
@@ -99,8 +113,8 @@ public class CommonGeneratorES {
             sb.append(newLine);
             sb.append(tab);
             sb.append(uppperStr + "View " + "query" + uppperStr +
-                    "ById" +
-                    "(String " + lowerStr +"Id" +
+                    "By" + uppperStr + "TableAnd" + uppperStr +"Id" +
+                    "(String " + lowerStr + "Table," + "String " + lowerStr +"Id" +
                     ");");
             sb.append(newLine2);
             sb.append("}");
@@ -200,6 +214,14 @@ public class CommonGeneratorES {
                     ");");
 
             sb.append(newLine2);
+            sb.append(tab);
+            sb.append("//编辑");
+            sb.append(newLine);
+            sb.append(tab);
+            sb.append("UpdateReturnJson edit("+ uppperStr +"View "+lowerStr + "View" +
+                    ");");
+
+            sb.append(newLine2);
             sb.append("}");
 
             File temp = new File("");
@@ -242,7 +264,7 @@ public class CommonGeneratorES {
             sb.append(newLine);
             sb.append("import com.ypc.common.utils.DateUtils;");
             sb.append(newLine);
-            sb.append("import com.jwd.common.utils.constants.CommonConstants;");
+            sb.append("import com.jwd.common.constants.MyConstants;");
             sb.append(newLine);
             sb.append("import com.ypc.common.utils.html.UpdateReturnJson;");
             sb.append(newLine);
@@ -306,7 +328,7 @@ public class CommonGeneratorES {
             sb.append(newLine);
             sb.append(tab);
             sb.append("public UpdateReturnJson add(" + uppperStr +" " + lowerStr + ") {");
-            sb.append(newLine2);
+            sb.append(newLine);
             sb.append(tab2);
             sb.append("UpdateReturnJson returnJson = new UpdateReturnJson();");
             sb.append(newLine);
@@ -314,7 +336,10 @@ public class CommonGeneratorES {
             sb.append("try{");
             sb.append(newLine);
             sb.append(tab3);
-            sb.append(lowerStr + ".setId(UuidUtils.getId());");
+            sb.append(lowerStr + ".set" + uppperStr + "Id" + "(UuidUtils.getId());");
+            sb.append(newLine);
+            sb.append(tab3);
+            sb.append(lowerStr + ".set" + uppperStr + "Table(\"1\");");
             sb.append(newLine);
             sb.append(tab3);
             sb.append(lowerStr + ".setCreateTime(DateUtils.getSystemDateForString(\"yyyy-MM-dd HH:mm:ss\"));");
@@ -353,8 +378,8 @@ public class CommonGeneratorES {
             sb.append(newLine);
             sb.append(tab2);
             sb.append(uppperStr + "View "+ lowerStr + "View" +" = " + lowerStr + "Repository." +
-                    "query" + uppperStr + "ById"  +
-                    "("  + lowerStr +"Id" + ");");
+                    "query" + uppperStr + "By" + uppperStr + "TableAnd" + uppperStr +"Id"  +
+                    "(\"1\","  + lowerStr +"Id" + ");");
             sb.append(newLine);
             sb.append(tab2);
             sb.append("return " + lowerStr + "View" + ";");
@@ -368,7 +393,7 @@ public class CommonGeneratorES {
             sb.append(newLine);
             sb.append(tab);
             sb.append("public UpdateReturnJson update(" + uppperStr + " " + lowerStr + ") {");
-            sb.append(newLine2);
+            sb.append(newLine);
             sb.append(tab2);
             sb.append("UpdateReturnJson returnJson = new UpdateReturnJson();");
             sb.append(newLine);
@@ -381,7 +406,8 @@ public class CommonGeneratorES {
             sb.append("if(" + lowerStr + " == " + "null ||");
             sb.append(newLine);
             sb.append(tab5);
-            sb.append("StringUtils.isEmpty(" + lowerStr +".getId())){");
+            sb.append("StringUtils.isEmpty(" + lowerStr +".get" +uppperStr+
+                    "Id())){");
             sb.append(newLine);
             sb.append(tab4);
             sb.append("returnJson.setUpdateError();");
@@ -395,7 +421,7 @@ public class CommonGeneratorES {
             sb.append(tab3);
 
             sb.append(uppperStr+"View "+lowerStr+"View = this.getById("+
-            lowerStr+".getId());");
+            lowerStr+".get" +uppperStr+ "Id());");
             sb.append(newLine);
             sb.append(tab3);
             sb.append("if(" + lowerStr+"View != null){");
@@ -408,6 +434,9 @@ public class CommonGeneratorES {
             sb.append(newLine);
             sb.append(tab4);
             sb.append("BeanToolUtils.copyPropertiesIgnoreNull("+ lowerStr+","+lowerStr+"1,null);");
+            sb.append(newLine);
+            sb.append(tab4);
+            sb.append(lowerStr+"1.setUpdateTime(DateUtils.getSystemDateForString(\"yyyy-MM-dd HH:mm:ss\"));");
             sb.append(newLine);
             sb.append(tab4);
             sb.append(lowerStr + "Repository.save("+lowerStr+"1);");
@@ -450,8 +479,8 @@ public class CommonGeneratorES {
             sb.append("@Override");
             sb.append(newLine);
             sb.append(tab);
-            sb.append("public UpdateReturnJson delete(String " + lowerStr.substring(0,uppperStr.length()-2) + "Uuid) {");
-            sb.append(newLine2);
+            sb.append("public UpdateReturnJson delete(String " +  lowerStr + "Id) {");
+            sb.append(newLine);
             sb.append(tab2);
             sb.append("UpdateReturnJson returnJson = new UpdateReturnJson();");
             sb.append(newLine);
@@ -459,7 +488,7 @@ public class CommonGeneratorES {
             sb.append("try{");
             sb.append(newLine);
             sb.append(tab3);
-            sb.append("if(StringUtils.isEmpty(" + lowerStr.substring(0,uppperStr.length()-2) + "Uuid)){");
+            sb.append("if(StringUtils.isEmpty(" + lowerStr + "Id)){");
             sb.append(newLine);
             sb.append(tab4);
             sb.append("returnJson.setDeleteError();");
@@ -471,7 +500,7 @@ public class CommonGeneratorES {
             sb.append("}");
             sb.append(newLine);
             sb.append(tab3);
-            sb.append(uppperStr+"View "+lowerStr+"View = this.getById("+lowerStr.substring(0,uppperStr.length()-2)+"Uuid);");
+            sb.append(uppperStr+"View "+lowerStr+"View = this.getById("+lowerStr + "Id);");
             sb.append(newLine);
             sb.append(tab3);
             sb.append(uppperStr+" "+ lowerStr+" = new " + uppperStr+"();");
@@ -543,15 +572,15 @@ public class CommonGeneratorES {
             sb.append("Pageable pageable = PageRequest.of(page,pageSize);");
             sb.append(newLine);
             sb.append(tab3);
-            sb.append("searchQuery = new NativeSearchQueryBuilder().withQuery(query).withIndices(CommonConstants." +lowerStr.toUpperCase()+
-                    "INDEX).withPageable(pageable).build();");
+            sb.append("searchQuery = new NativeSearchQueryBuilder().withQuery(query).withIndices(" +this.index+
+                    ").withPageable(pageable).build();");
             sb.append(newLine);
             sb.append(tab2);
             sb.append("}else{");
             sb.append(newLine);
             sb.append(tab3);
-            sb.append("searchQuery = new NativeSearchQueryBuilder().withQuery(query).withIndices(CommonConstants." +lowerStr.toUpperCase()+
-                    "INDEX).build();");
+            sb.append("searchQuery = new NativeSearchQueryBuilder().withQuery(query).withIndices(" +this.index+
+                    ").build();");
             sb.append(newLine);
             sb.append(tab2);
             sb.append("}");
@@ -583,8 +612,8 @@ public class CommonGeneratorES {
             sb.append("QueryBuilder query = this.getQueryCondition("+lowerStr+"Query);");
             sb.append(newLine);
             sb.append(tab2);
-            sb.append("SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(query).withIndices(CommonConstants." +lowerStr.toUpperCase()+
-                    "INDEX).withPageable(PageRequest.of(0,10000-1)).build();");
+            sb.append("SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(query).withIndices(" +this.index+
+                    ").withPageable(PageRequest.of(0,10000-1)).build();");
             sb.append(newLine);
             sb.append(tab2);
             sb.append("List<"+uppperStr+"View> list = " +
@@ -598,6 +627,74 @@ public class CommonGeneratorES {
             sb.append(newLine2);
             sb.append(tab);
 
+            sb.append("@Override");
+            sb.append(newLine);
+            sb.append(tab);
+            sb.append("public UpdateReturnJson edit("+uppperStr +"View "+lowerStr+"View) {");
+            sb.append(newLine);
+            sb.append(tab2);
+            sb.append("UpdateReturnJson updateReturnJson = new UpdateReturnJson();");
+            sb.append(newLine);
+            sb.append(tab2);
+            sb.append("if("+lowerStr+"View == null) {");
+            sb.append(newLine);
+            sb.append(tab3);
+            sb.append("updateReturnJson.setUpdateError();");
+            sb.append(newLine);
+            sb.append(tab3);
+            sb.append("return updateReturnJson;");
+            sb.append(newLine);
+            sb.append(tab2);
+            sb.append("}");
+            sb.append(newLine);
+            sb.append(tab2);
+            sb.append("try{");
+            sb.append(newLine);
+            sb.append(tab3);
+            sb.append(uppperStr+" "+lowerStr+" = new "+uppperStr+"();");
+            sb.append(newLine);
+            sb.append(tab3);
+            sb.append("BeanToolUtils.copyProperties("+lowerStr+"View "+","+lowerStr+");");
+            sb.append(newLine);
+            sb.append(tab3);
+            sb.append("if(StringUtils.isEmpty("+lowerStr+"View.get" +uppperStr+ "Id())) {");
+            sb.append(newLine);
+            sb.append(tab4);
+            sb.append("this.add("+lowerStr+");");
+            sb.append(newLine);
+            sb.append(tab3);
+            sb.append("}else {");
+            sb.append(newLine);
+            sb.append(tab4);
+            sb.append("this.update("+lowerStr+");");
+            sb.append(newLine);
+            sb.append(tab3);
+            sb.append("}");
+            sb.append(newLine);
+            sb.append(tab3);
+            sb.append("updateReturnJson.setUpdateSuccess();");
+            sb.append(newLine);
+            sb.append(tab2);
+            sb.append("}catch(Exception e){");
+            sb.append(newLine);
+            sb.append(tab3);
+            sb.append("e.printStackTrace();");
+            sb.append(newLine);
+            sb.append(tab3);
+            sb.append("updateReturnJson.setDeleteError();");
+            sb.append(newLine);
+            sb.append(tab2);
+            sb.append("}");
+            sb.append(newLine2);
+            sb.append(tab2);
+            sb.append("return updateReturnJson;");
+            sb.append(newLine);
+            sb.append(tab);
+            sb.append("}");
+
+
+            sb.append(newLine2);
+            sb.append(tab);
             //生成公用查询条件
             sb.append("private BoolQueryBuilder getQueryCondition(" + uppperStr + "Query " +
                     lowerStr + "Query" +
@@ -605,6 +702,10 @@ public class CommonGeneratorES {
             sb.append(newLine);
             sb.append(tab2);
             sb.append("BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();");
+            sb.append(newLine);
+            sb.append(tab2);
+            sb.append("boolQueryBuilder.must(QueryBuilders.termQuery(\"" +lowerStr+
+                    "Table.keyword\",\"1\"));");
             sb.append(newLine);
             sb.append(tab2);
             sb.append("if("+lowerStr + "Query"+" == null){");
@@ -769,28 +870,11 @@ public class CommonGeneratorES {
             lowerStr+"Query){");
             sb.append(newLine);
             sb.append(tab2);
-            /*sb.append("DataTablesReturnJSON returnJson = new DataTablesReturnJSON();");
-            sb.append(newLine);
-            sb.append(tab2);
-            sb.append("DataTablesReturnObj dataTables = new DataTablesReturnObj();");*/
-            sb.append("MyPageInfo<"+uppperStr+"View> returnJson = new MyPageInfo();");
-            sb.append(newLine);
-            sb.append(tab2);
             sb.append("Page<"+uppperStr+"View> "+lowerStr+"Views = "+
                     lowerStr+"Service.getList("+lowerStr+"Query);");
             sb.append(newLine);
             sb.append(tab2);
-            /*sb.append("dataTables.setTotal((int)"+lowerStr+"Views.getTotalElements());");
-            sb.append(newLine);
-            sb.append(tab2);
-            sb.append("dataTables.setRows("+lowerStr+"Views.getContent());");
-            sb.append(newLine);
-            sb.append(tab2);
-            sb.append("returnJson.setData(dataTables);");*/
-            sb.append("returnJson.setTotal((int)"+lowerStr+"Views.getTotalElements());");
-            sb.append(newLine);
-            sb.append(tab2);
-            sb.append("returnJson.setList("+lowerStr+"Views.getContent());");
+            sb.append("MyPageInfo<"+uppperStr+"View> returnJson = new MyPageInfo("+lowerStr+"Views);");
             sb.append(newLine);
             sb.append(tab2);
             sb.append("return returnJson;");
@@ -815,28 +899,10 @@ public class CommonGeneratorES {
             sb.append("UpdateReturnJson returnJson = new UpdateReturnJson();");
             sb.append(newLine);
             sb.append(tab2);
-            sb.append(uppperStr + " " + lowerStr + " = JSON.parseObject(data, " + uppperStr + ".class);");
+            sb.append(uppperStr + "View " + lowerStr + "View = JSON.parseObject(data, " + uppperStr + "View.class);");
             sb.append(newLine);
             sb.append(tab2);
-            sb.append("if (StringUtils.isEmpty(" + lowerStr + ".getId())) {");
-            sb.append(newLine);
-            sb.append(tab3);
-            sb.append("// 新增");
-            sb.append(newLine);
-            sb.append(tab3);
-            sb.append("returnJson = " + lowerStr + "Service.add(" + lowerStr + ");");
-            sb.append(newLine);
-            sb.append(tab2);
-            sb.append("} else {");
-            sb.append(newLine);
-            sb.append(tab3);
-            sb.append("// 修改");
-            sb.append(newLine);
-            sb.append(tab3);
-            sb.append("returnJson = " + lowerStr +"Service.update(" + lowerStr + ");");
-            sb.append(newLine);
-            sb.append(tab2);
-            sb.append("}");
+            sb.append("returnJson = " + lowerStr + "Service.edit(" + lowerStr + "View);");
             sb.append(newLine);
             sb.append(tab2);
             sb.append("return returnJson;");
@@ -967,7 +1033,7 @@ public class CommonGeneratorES {
         sb.append("package " + packagePath+ ".pojo.query;");
         sb.append(newLine3);
 
-        sb.append("import com.ypc.common.utils.html.DataTablesParam;");
+        sb.append("import com.ypc.common.pojo.query.CommonQuery;");
         sb.append(newLine2);
 
         //注释部分
@@ -975,7 +1041,7 @@ public class CommonGeneratorES {
         sb.append(" * " + uppperStr + " query查询" + newLine);
         sb.append(" * " + DateUtils.getSystemDateForString("yyyy-MM-dd HH:mm:ss.SSS")  + newLine);
         sb.append(" */ " + newLine2);
-        sb.append("public class " + className + "Query extends DataTablesParam {");
+        sb.append("public class " + className + "Query extends CommonQuery {");
         sb.append(newLine2);
 
         processQueryAttrs(sb);

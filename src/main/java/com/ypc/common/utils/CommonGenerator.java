@@ -1,11 +1,8 @@
-package com.ypc.codegenerator;
+package com.ypc.common.utils;
 
 /**
  * Created by dodo on 2017/9/2.
  */
-
-
-import com.ypc.common.utils.CharUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -176,10 +173,20 @@ public class CommonGenerator {
             sb.append("UpdateReturnJson delete(String id);");
             sb.append(newLine2);
             sb.append(tab);
+
+            sb.append("//编辑");
+            sb.append(newLine);
+            sb.append(tab);
+            sb.append("UpdateReturnJson edit("+ uppperStr +"View "+lowerStr + "View" +
+                    ");");
+            sb.append(newLine2);
+            sb.append(tab);
+
             sb.append("// 获取table列表数据");
             sb.append(newLine);
             sb.append(tab);
             sb.append("MyPageInfo<" + uppperStr +"View> getList(" + uppperStr +"Query "+lowerStr+ "Query);");
+
             sb.append(newLine2);
             sb.append("}");
             fw.write(sb.toString().getBytes());
@@ -209,6 +216,8 @@ public class CommonGenerator {
             sb.append(newLine2);
             sb.append("import com.github.pagehelper.PageHelper;");
             sb.append(newLine);
+            sb.append("import com.ypc.common.utils.BeanToolUtils;");
+            sb.append(newLine);
             sb.append("import com.ypc.common.utils.html.UpdateReturnJson;");
             sb.append(newLine);
             sb.append("import com.ypc.common.utils.sql.MyPageInfo;");
@@ -228,6 +237,8 @@ public class CommonGenerator {
             sb.append("import org.springframework.transaction.annotation.Transactional;");
             sb.append(newLine);
             sb.append("import org.springframework.stereotype.Service;");
+            sb.append(newLine);
+            sb.append("import org.springframework.util.StringUtils;");
             sb.append(newLine2);
             sb.append("@Service");
             sb.append(newLine);
@@ -243,7 +254,7 @@ public class CommonGenerator {
             sb.append("@Override");
             sb.append(newLine);
             sb.append(tab);
-            sb.append("@Transactional");
+            sb.append("@Transactional(rollbackFor = Exception.class)");
             sb.append(newLine);
             sb.append(tab);
             sb.append("public UpdateReturnJson add(" + uppperStr +" " + lowerStr + ") {");
@@ -282,7 +293,7 @@ public class CommonGenerator {
             sb.append("@Override");
             sb.append(newLine);
             sb.append(tab);
-            sb.append("@Transactional");
+            sb.append("@Transactional(rollbackFor = Exception.class)");
             sb.append(newLine);
             sb.append(tab);
             sb.append("public UpdateReturnJson update(" + uppperStr + " " + lowerStr + ") {");
@@ -306,7 +317,7 @@ public class CommonGenerator {
             sb.append("@Override");
             sb.append(newLine);
             sb.append(tab);
-            sb.append("@Transactional");
+            sb.append("@Transactional(rollbackFor = Exception.class)");
             sb.append(newLine);
             sb.append(tab);
             sb.append("public UpdateReturnJson delete(String id) {");
@@ -325,6 +336,62 @@ public class CommonGenerator {
             sb.append(newLine);
             sb.append(tab);
             sb.append("}");
+            sb.append(newLine2);
+            sb.append(tab);
+
+            sb.append("@Override");
+            sb.append(newLine);
+            sb.append(tab);
+            sb.append("@Transactional(rollbackFor = Exception.class)");
+            sb.append(newLine);
+            sb.append(tab);
+            sb.append("public UpdateReturnJson edit("+uppperStr +"View "+lowerStr+"View) {");
+            sb.append(newLine);
+            sb.append(tab2);
+            sb.append("UpdateReturnJson updateReturnJson = new UpdateReturnJson();");
+            sb.append(newLine);
+            sb.append(tab2);
+            sb.append("if("+lowerStr+"View == null) {");
+            sb.append(newLine);
+            sb.append(tab3);
+            sb.append("updateReturnJson.setUpdateError();");
+            sb.append(newLine);
+            sb.append(tab3);
+            sb.append("return updateReturnJson;");
+            sb.append(newLine);
+            sb.append(tab2);
+            sb.append("}");
+            sb.append(newLine);
+            sb.append(tab2);
+            sb.append(uppperStr+" "+lowerStr+" = new "+uppperStr+"();");
+            sb.append(newLine);
+            sb.append(tab2);
+            sb.append("BeanToolUtils.copyProperties("+lowerStr+"View "+","+lowerStr+");");
+            sb.append(newLine);
+            sb.append(tab2);
+            sb.append("if(StringUtils.isEmpty("+lowerStr+"View.getId())) {");
+            sb.append(newLine);
+            sb.append(tab3);
+            sb.append("this.add("+lowerStr+");");
+            sb.append(newLine);
+            sb.append(tab2);
+            sb.append("}else {");
+            sb.append(newLine);
+            sb.append(tab3);
+            sb.append("this.update("+lowerStr+");");
+            sb.append(newLine);
+            sb.append(tab2);
+            sb.append("}");
+            sb.append(newLine);
+            sb.append(tab2);
+            sb.append("updateReturnJson.setUpdateSuccess();");
+            sb.append(newLine);
+            sb.append(tab2);
+            sb.append("return updateReturnJson;");
+            sb.append(newLine);
+            sb.append(tab);
+            sb.append("}");
+
             sb.append(newLine2);
             sb.append(tab);
             sb.append("@Override");
@@ -381,11 +448,7 @@ public class CommonGenerator {
             sb.append(newLine);
             sb.append("import com.ypc.common.utils.sql.MyPageInfo;");
             sb.append(newLine);
-            sb.append("import org.springframework.util.StringUtils;");
-            sb.append(newLine);
             sb.append("import com.ypc.common.utils.html.UpdateReturnJson;");
-            sb.append(newLine);
-            sb.append("import " + packagePath + ".pojo." + filename + ";");
             sb.append(newLine);
             sb.append("import " + packagePath + ".pojo.query." + filename + "Query" + ";");
             sb.append(newLine);
@@ -439,6 +502,9 @@ public class CommonGenerator {
 
             sb.append(newLine2);
             sb.append(tab);
+            sb.append("//编辑");
+            sb.append(newLine);
+            sb.append(tab);
             sb.append("@RequestMapping(\"/edit\")");
             sb.append(newLine);
             sb.append(tab);
@@ -451,34 +517,17 @@ public class CommonGenerator {
             sb.append("UpdateReturnJson returnJson = new UpdateReturnJson();");
             sb.append(newLine);
             sb.append(tab2);
-            sb.append(uppperStr + " " + lowerStr + " = JSON.parseObject(data, " + uppperStr + ".class);");
+            sb.append(uppperStr + "View " + lowerStr + "View = JSON.parseObject(data, " + uppperStr + "View.class);");
             sb.append(newLine);
             sb.append(tab2);
-            sb.append("if (StringUtils.isEmpty(" + lowerStr + ".getId())) {");
-            sb.append(newLine);
-            sb.append(tab3);
-            sb.append("// 新增");
-            sb.append(newLine);
-            sb.append(tab3);
-            sb.append("returnJson = " + lowerStr + "Service.add(" + lowerStr + ");");
-            sb.append(newLine);
-            sb.append(tab2);
-            sb.append("} else {");
-            sb.append(newLine);
-            sb.append(tab3);
-            sb.append("// 修改");
-            sb.append(newLine);
-            sb.append(tab3);
-            sb.append("returnJson = " + lowerStr +"Service.update(" + lowerStr + ");");
-            sb.append(newLine);
-            sb.append(tab2);
-            sb.append("}");
+            sb.append("returnJson = " + lowerStr + "Service.edit(" + lowerStr + "View);");
             sb.append(newLine);
             sb.append(tab2);
             sb.append("return returnJson;");
             sb.append(newLine);
             sb.append(tab);
             sb.append("}");
+
             sb.append(newLine);
             sb.append(newLine);
             sb.append(tab);
@@ -494,7 +543,7 @@ public class CommonGenerator {
             sb.append("public UpdateReturnJson del(String id){");
             sb.append(newLine);
             sb.append(tab2);
-            sb.append("UpdateReturnJson dmo="+lowerStr + "Service.delete(id);");
+            sb.append("UpdateReturnJson dmo = "+lowerStr + "Service.delete(id);");
             sb.append(newLine);
             sb.append(tab2);
             sb.append("return dmo;");

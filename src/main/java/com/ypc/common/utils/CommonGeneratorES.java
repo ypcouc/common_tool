@@ -1,12 +1,9 @@
-package com.ypc.codegenerator;
+package com.ypc.common.utils;
 
 /**
  * Created by dodo on 2017/9/2.
  */
 
-
-import com.ypc.common.utils.CharUtils;
-import com.ypc.common.utils.DateUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.*;
