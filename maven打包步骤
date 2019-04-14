@@ -1,0 +1,20 @@
+-D第一步：进入dos窗口，切换至项目所在目录；
+
+第二步：执行下面的命令打包
+
+    1、mvn clean
+    2、mvn install -Dmaven.test.skip=true
+	
+第三步：打包完成后，在target目录,且自动生成本地maven仓库。
+
+
+
+
+
+
+
+
+
+
+
+

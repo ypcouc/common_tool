@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 
-@Service("tokenManagerService")
+@Service
 public class TokenManagerServiceImpl implements TokenManagerService {
     public final static String tokenKey = "tokenArr";
     @Autowired
