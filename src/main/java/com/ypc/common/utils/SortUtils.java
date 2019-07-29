@@ -1,6 +1,7 @@
 package com.ypc.common.utils;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -110,6 +111,26 @@ public class SortUtils {
         return result;
     }
 
+    public static int[] getTwoNumForTarget(int[] nums,int target){
+        int[] result = {-1,-1};
+        Map<Integer,Integer> map = new HashMap<>();
+        int n = 0;
+        outterLoop :while (n < target){
+            for(int i = 0; i < nums.length; i++){
+                int temp = target - n - nums[i];
+                if(map.containsKey(temp)){
+                    result[0] = temp;
+                    result[1] = nums[i];
+                    break outterLoop;
+                }
+                map.put(nums[i],i);
+            }
+            n++;
+        }
+
+        return result;
+    }
+
     /**
      * 二分查找
      * @param arry
@@ -140,8 +161,8 @@ public class SortUtils {
         int index = binarySearch(arry,1);
         System.out.println(index);*/
         int[] numbers = {3,2,4};
-        int target=6;
-        int[] result = twoSum(numbers,target);
+        int target=3;
+        int[] result = getTwoNumForTarget(numbers,target);
         System.out.println(Arrays.toString(result));
     }
 
