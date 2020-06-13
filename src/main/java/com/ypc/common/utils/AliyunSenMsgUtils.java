@@ -29,8 +29,8 @@ public class AliyunSenMsgUtils {
     static final String domain = "dysmsapi.aliyuncs.com";
 
     // TODO 此处需要替换成开发者自己的AK(在阿里云访问控制台寻找)
-    static final String accessKeyId = "LTAIPpGx4D6pXN5h";
-    static final String accessKeySecret = "tMInX8A29sQgwTMqJLUdw05rZIyClV";
+    static final String accessKeyId = "";
+    static final String accessKeySecret = "";
 
     public static Boolean sendSms(String phone,String content) throws ClientException {
         Boolean result = false;
@@ -109,7 +109,7 @@ public class AliyunSenMsgUtils {
     public static void main(String[] args) throws ClientException, InterruptedException {
 
         //发短信
-        Boolean b = sendSms("13825206592","test");
+        Boolean b = sendSms("","test");
         System.out.println(b);
         /*System.out.println("短信接口返回的数据----------------");
         System.out.println("Code=" + response.getCode());
